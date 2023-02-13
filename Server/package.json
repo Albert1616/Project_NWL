@@ -1,0 +1,30 @@
+{
+  "name": "project_nwl",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx tsx watch src/server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Albert1616/Project_NWL.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Albert1616/Project_NWL/issues"
+  },
+  "homepage": "https://github.com/Albert1616/Project_NWL#readme",
+  "dependencies": {
+    "@fastify/cors": "^8.2.0",
+    "@prisma/client": "^4.10.1",
+    "fastify": "^4.13.0",
+    "prisma": "^4.10.1"
+  },
+  "devDependencies": {
+    "tsx": "^3.12.3",
+    "typescript": "^4.9.5"
+  }
+}
