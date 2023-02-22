@@ -1,15 +1,16 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import { Habit } from './components/habti'
+import { Habit } from './components/Habti'
+import { Header } from './components/Header'
 import './App.css'
+import { TableDays } from './components/TableDays'
 
-function App() {
-
+export function App() {
   return (
     <div className="App">
-    <Habit text='Meu pau' num={10} />
+      {/* <Habit text='Meu pau' num={10} /> */}
+      <div className='content'>
+        <Header />
+        <TableDays />
+      </div>
     </div>
   )
 }
-
-export default App
