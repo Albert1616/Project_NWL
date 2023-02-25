@@ -58,13 +58,87 @@ export async function AppRoute(app: FastifyInstance) {
             }
         })
 
-        const showHabit = CompletedHabits?.dayHabits.map(day =>{
+        const showHabit = CompletedHabits?.dayHabits.map(day => {
             return day.id_habit;
         })
 
-        return {
-            PossibleHabits,
-            showHabit,
+        if (showHabit?.length !== 0) {
+            return {
+                PossibleHabits,
+                showHabit,
+            }
+        } else {
+            return { PossibleHabits }
         }
+
+
+    })
+
+    app.patch('/habits/:id/toggle', async (request) => {
+        const CheckHabitComplete = z.object({
+            id: z.string().uuid()
+        })
+
+        const { id } = CheckHabitComplete.parse(request.params);
+        const today = dayjs().startOf('day').toDate();
+
+        let Days = await prisma.days.findUnique({
+            where: {
+                date: today
+            }
+        })
+
+        if (!Days) {
+            Days = await prisma.days.create({
+                data: {
+                    date: today
+                }
+            })
+        }
+
+        const HabitDay = await prisma.dayHabit.findUnique({
+            where: {
+                id_day_id_habit: {
+                    id_day: Days.id,
+                    id_habit: id
+                }
+            }
+        })
+
+        if (HabitDay) {
+            await prisma.dayHabit.delete({
+                where: {
+                    id_day_id_habit: {
+                        id_day: Days.id,
+                        id_habit: id
+                    }
+                }
+            })
+        } else {
+            await prisma.dayHabit.create({
+                data: {
+                    id_day: Days.id,
+                    id_habit: id
+                }
+            })
+        }
+    })
+
+    app.get('/DetailsDay', async (request) => {
+        const Detail = await prisma.$queryRaw`
+        SELECT 
+        D.id, 
+        D.date,
+        (
+            SELECT  cast(count(*) as float)
+            FROM Day_habit HD WHERE HD.id_day = D.id
+        )as CompletedHabits,
+        (
+            SELECT cast(count(*) as float)
+            FROM habit_week_days HW
+            WHERE HW.week_day = cast (strftime('%w',D.date/1000.0,'unixepoch') as int)
+        )as PossibleHabits FROM days D;
+        `
+        return Detail
     })
 }

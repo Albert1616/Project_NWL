@@ -30,7 +30,11 @@ export function TableDays() {
 
             <div className='table_habit'>
                 {RangeGenerateDays.map(day =>{
-                    return <HabitDay />
+                    return (
+                    <HabitDay 
+                    amount={5} 
+                    amountCompleted={Math.round(Math.random() * 5)}
+                    />)
                 })}
 
                 {RestDays > 0 && Array.from({length:RestDays}).map(day =>{
